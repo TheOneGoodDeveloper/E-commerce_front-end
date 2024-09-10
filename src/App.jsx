@@ -13,6 +13,7 @@ import Signup from './Pages/Signup';
 
 const  router = createBrowserRouter(
   createRoutesFromElements(
+    
     <Route path='/' element={<RootLayout />}>
       <Route index element={<Home />}/>
 

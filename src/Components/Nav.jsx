@@ -133,11 +133,11 @@ import { BsFillHandbagFill } from "react-icons/bs";
 import { FaUserAlt } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 
-
 function Nav() {
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
   const aboutDropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const Links = [
     { name: "HOME", link: "/Home" },
@@ -159,20 +159,40 @@ function Nav() {
     };
   }, [aboutDropdownRef]);
 
+  // Handle scroll event to change navbar background color
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      if (scrollY >=90) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the scroll event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="p-4 w-full flex fixed justify-between items-center shadow-lg z-40">
+    <nav className={`p-4 w-full flex fixed justify-between items-center shadow-lg z-40 transition-colors duration-500 ${
+        isScrolled ? 'bg-fuchsia-900 text-white' : 'bg-transparent text-white'}`}>
       <div className="font-bold text-white text-2xl cursor-pointer ml-6 mt-4 flex items-center gap-1">
-       <a href="/"> <p>ABC</p></a>
+        <a href="/"> <p>ABC</p></a>
       </div>
 
-     <div onClick={() => setOpen(!open)} className="absolute right-5 top-5 cursor-pointer md:hidden">
-        {open ? (<IoMdClose size={28} /> ): (<RxHamburgerMenu size={28} />)}
-      </div> 
-    
+      <div onClick={() => setOpen(!open)} className="absolute right-5 top-5 cursor-pointer md:hidden">
+        {open ? (<IoMdClose size={28} />) : (<RxHamburgerMenu size={28} />)}
+      </div>
 
-      <ul className={`md:flex md:items-center  text-white md:pb-0 pb-12 absolute md:static bg-gray md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 p-2 gap-20 transition-all duration-500 ease-in ${open ? 'top-20' : 'top-[-490px]'}`}>
+      <ul className={`md:flex md:items-center text-white md:pb-0 pb-12 absolute md:static bg-gray md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 p-2 gap-20 transition-all duration-500 ease-in ${open ? 'top-20 text-black' : 'top-[-490px]'}`}>
         {Links.map((link) => (
-          <li key={link.name} className="relative ml-4  mt-4 font-semibold">
+          <li key={link.name} className="relative ml-4 mt-4 font-semibold">
             {link.name === "PRODUCTS" ? (
               <>
                 <button
@@ -186,28 +206,13 @@ function Nav() {
                 {isAboutDropdownOpen && (
                   <ul className="absolute left-0 mt-6 py-2 w-48 rounded-md shadow-lg bg-white z-20">
                     <li>
-                      <a
-                        href="/product1"
-                        className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300"
-                      >
-                        Product 1
-                      </a>
+                      <a href="/product1" className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300">Product 1</a>
                     </li>
                     <li>
-                      <a
-                        href="/product2"
-                        className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300"
-                      >
-                        Product 2
-                      </a>
+                      <a href="/product2" className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300">Product 2</a>
                     </li>
                     <li>
-                      <a
-                        href="/product3"
-                        className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300"
-                      >
-                        Product 3
-                      </a>
+                      <a href="/product3" className="block px-4 py-2 hover:bg-blue-400 hover:text-white duration-300">Product 3</a>
                     </li>
                   </ul>
                 )}
@@ -226,7 +231,7 @@ function Nav() {
           <input
             id="q"
             name="q"
-            className="w-full max-w-xs border rounded-xl  py-2 pl-3 pr-10 placeholder-gray-500 text-sm focus:border-blue"
+            className="w-full max-w-xs border rounded-xl py-2 pl-3 pr-10 placeholder-gray-500 text-sm focus:border-blue"
             placeholder="Search Products"
             type="text"
           />
@@ -248,4 +253,3 @@ function Nav() {
 }
 
 export default Nav;
-
